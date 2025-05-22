@@ -42,5 +42,5 @@ instancepoc-hpa   Deployment/instancepoc   25%/30%   1         2         2
 Configuration Files
 File	                    Purpose	                          Key Settings
 deployment.yaml	            Main app deployment	              resources: 200m CPU, 256Mi memory
-hpa.yaml	              Autoscaling rules	              cpu: 30%, maxReplicas: 2
-metrics-server.yaml	      Cluster metrics collection	      --metric-resolution=15s
+hpa.yaml	            Autoscaling rules	              cpu: 30%, maxReplicas: 2
+metrics-server.yaml	    Cluster metrics collection	      --metric-resolution=15s
