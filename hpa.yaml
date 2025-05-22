@@ -1,0 +1,25 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: instancepoc-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: instancepoc
+  minReplicas: 1
+  maxReplicas: 2  # Reduced from 3 (safer for your device)
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 30  # Increased from 20% (less sensitive)
+  behavior:  # Added to prevent flapping
+    scaleDown:
+      stabilizationWindowSeconds: 180  # Wait 3 minutes before scaling down
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60

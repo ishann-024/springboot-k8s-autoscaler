@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: instancepoc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: instancepoc
+  template:
+    metadata:
+      labels:
+        app: instancepoc
+    spec:
+      containers:
+        - name: instancepoc
+          image: localhost:5000/instancepoc:stable  # Specific stable tag
+          imagePullPolicy: IfNotPresent  # Critical for local registry
+          ports:
+            - containerPort: 9090
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "256Mi"
+            limits:
+              cpu: "300m"
+              memory: "384Mi"
+          startupProbe:  # Added for slow-starting apps
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            initialDelaySeconds: 5  # Starts after startup succeeds
+            periodSeconds: 20
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
